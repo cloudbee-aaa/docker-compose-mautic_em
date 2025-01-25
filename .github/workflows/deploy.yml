@@ -1,9 +1,6 @@
 name: Deploy to DigitalOcean
 
 on:
-  push:
-    branches:
-      - peeterma-patch-1
   workflow_dispatch:      
 
 jobs:
