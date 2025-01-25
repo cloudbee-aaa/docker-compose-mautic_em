@@ -3,7 +3,7 @@ name: Deploy to DigitalOcean
 on:
   push:
     branches:
-      - main
+      - peeterma-patch-1
   workflow_dispatch:      
 
 jobs:
@@ -61,7 +61,7 @@ jobs:
 
     - name: Create VPS if it doesn't exist
       run: |
-        if ! doctl compute droplet list | grep -q 'mautic-em.cloudbee.com'; then
+        if ! doctl compute droplet list | grep -xq 'mautic-em.cloudbee.com'; then
           doctl compute droplet create mautic-em.cloudbee.com --image docker-20-04 --size s-1vcpu-1gb --region fra1 --ssh-keys ${{ secrets.DIGITALOCEAN_SSH_FINGERPRINT }} --wait --user-data-file setup-vps.sh --enable-monitoring
           echo "droplet_created=true" >> $GITHUB_ENV
         else
