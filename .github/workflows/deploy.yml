@@ -29,6 +29,8 @@ jobs:
         fi
       env:
         EMAIL_ADDRESS: ${{ vars.EMAIL_ADDRESS }}
+        DROPLET_NAME: ${{ vars.DROPLET_NAME }}
+        
 
     - name: Check required secrets
       env:
@@ -61,11 +63,11 @@ jobs:
 
     - name: Create VPS if it doesn't exist
       run: |
-        if ! doctl compute droplet list | grep -xq 'mautic-em.cloudbee.com'; then
-          doctl compute droplet create mautic-em.cloudbee.com --image docker-20-04 --size s-1vcpu-1gb --region fra1 --ssh-keys ${{ secrets.DIGITALOCEAN_SSH_FINGERPRINT }} --wait --user-data-file setup-vps.sh --enable-monitoring
+        if ! doctl compute droplet list | grep -xq '${{ vars.DROPLET_NAME }}'; then
+          doctl compute droplet create ${{ vars.DROPLET_NAME }} --image docker-20-04 --size s-1vcpu-2gb --region fra1 --ssh-keys ${{ secrets.DIGITALOCEAN_SSH_FINGERPRINT }} --wait --user-data-file setup-vps.sh --enable-monitoring
           echo "droplet_created=true" >> $GITHUB_ENV
         else
-          echo "Droplet 'mautic-em.cloudbee.com' already exists."
+          echo "Droplet '${{ vars.DROPLET_NAME }}' already exists."
           echo "droplet_created=true" >> $GITHUB_ENV
         fi
 
@@ -75,9 +77,9 @@ jobs:
         while : ; do
           echo "."
           sleep 2
-          STATUS=$(doctl compute droplet get mautic-em.cloudbee.com --format Status --no-header)
+          STATUS=$(doctl compute droplet get ${{ vars.DROPLET_NAME }} --format Status --no-header)
           if [ "$STATUS" = "active" ]; then
-            IP=$(doctl compute droplet get mautic-em.cloudbee.com --format PublicIPv4 --no-header)
+            IP=$(doctl compute droplet get ${{ vars.DROPLET_NAME }} --format PublicIPv4 --no-header)
             if [ -n "$IP" ]; then
               echo "Droplet is active. IP address: $IP"
               break
