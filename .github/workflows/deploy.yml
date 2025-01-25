@@ -3,7 +3,8 @@ name: Deploy to DigitalOcean
 on:
   push:
     branches:
-      - main
+      - asset-generate
+  workflow_dispatch:      
 
 jobs:
   deploy:
