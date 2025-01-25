@@ -63,7 +63,7 @@ jobs:
 
     - name: Create VPS if it doesn't exist
       run: |
-        if ! doctl compute droplet list | grep -xq '${{ vars.DROPLET_NAME }}'; then
+        if ! doctl compute droplet list | grep -q '${{ vars.DROPLET_NAME }}'; then
           doctl compute droplet create ${{ vars.DROPLET_NAME }} --image docker-20-04 --size s-1vcpu-2gb --region fra1 --ssh-keys ${{ secrets.DIGITALOCEAN_SSH_FINGERPRINT }} --wait --user-data-file setup-vps.sh --enable-monitoring
           echo "droplet_created=true" >> $GITHUB_ENV
         else
