@@ -16,6 +16,8 @@ RUN cd /var/www/html && \
 
 # Production stage:
 FROM mautic/mautic:${MAUTIC_VERSION}
+# Added by PM
+RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
 
 # Copy the built assets and the Mautic installation from the build stage:
 COPY --from=build --chown=www-data:www-data /var/www/html /var/www/html
