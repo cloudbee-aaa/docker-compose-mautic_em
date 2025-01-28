@@ -3,6 +3,9 @@ name: Deploy to DigitalOcean
 on:
   workflow_dispatch:      
 
+vars:
+  DROPLET_NAME: ${{ vars.DROPLET_NAME }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
