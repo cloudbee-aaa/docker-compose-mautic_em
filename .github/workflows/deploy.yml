@@ -3,12 +3,11 @@ name: Deploy to DigitalOcean
 on:
   workflow_dispatch:      
 
-vars:
-  DROPLET_NAME: ${{ vars.DROPLET_NAME }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      DROPLET_NAME: ${{ vars.DROPLET_NAME }}    
 
     steps:
     - name: Checkout code
